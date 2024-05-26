@@ -46,9 +46,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.subscribe.add(
       this._chat.onPrivateMessage().subscribe((message: any) => {
-        if (message.senderId === this.selectedUser._id || message.senderId === this.senderId) {
-          this.messages.push(message);
-        }
+        console.log(message);
+        this.messages.push(message);
       })
     );
   }
@@ -56,6 +55,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   selectUser(user: any): void {
     this.selectedUser = user;
     this._chat.fetchMessages(this.senderId, user._id, true).subscribe(messages => {
+      console.log(messages);
       this.messages = messages;
     });
   }
@@ -87,8 +87,8 @@ export class ChatComponent implements OnInit, OnDestroy {
             fileUrl: res.fileUrl,
           });
         },
-        error: (err: { message: any; }) => {
-          this.openErrorSnackBar(`File upload failed: ${err.message}`);
+        error: (err) => {
+          this.openErrorSnackBar(`File upload failed: ${err.error.message ? err.error.message : err.message}`);
         }
       });
     }

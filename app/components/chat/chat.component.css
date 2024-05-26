@@ -1,7 +1,6 @@
-/* chat.component.css */
 .chat-container {
   display: flex;
-  height: calc(100vh - 64px); /* Full height minus the toolbar height */
+  height: calc(100vh - 64px); 
 }
 
 .chat-sidenav-container {
@@ -54,4 +53,36 @@
   vertical-align: middle;
   margin-right: 8px;
   font-size: 21px;
+}
+
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+.message.self {
+  align-self: flex-end;
+  text-align: right;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.message.other {
+  align-self: flex-start;
+  text-align: left;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.download-link {
+  margin-top: 5px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.download-link:hover {
+  text-decoration: underline;
 }

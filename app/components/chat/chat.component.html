@@ -20,10 +20,19 @@
                 <h2>{{ selectedUser.username }}</h2>
             </div>
             <div class="chat-messages">
-                <div *ngFor="let message of messages" class="message" [class.self]="message.senderId == senderId">
-                    <p>{{ message.message }}</p>
+                <div *ngFor="let message of messages" class="message" [class.self]="message.senderId == senderId" [class.other]="message.senderId != senderId">
+                  <p *ngIf="message.message">{{ message.message }}</p>
+                  <div *ngIf="message.file">
+                    <p>File: {{ message.file.originalname }}</p>
+                    <div *ngIf="message.file.mimetype.startsWith('image')">
+                        <img class="image-preview" [src]="'http://localhost:3000/file/images/' + message.file.filename" alt="Image" />
+                    </div>
+
+                    <a class="download-link" *ngIf="!message.file.mimetype.startsWith('image')" [href]="'http://localhost:3000/api/files/'+ message._id" [download]="message.file.originalname" download>Download</a>
+                  </div>
                 </div>
-            </div>
+              </div>
+
             <div class="chat-input">
                 <mat-form-field class="chat-input-field" appearance="fill">
                     <mat-label>Type a message</mat-label>
@@ -32,7 +41,7 @@
                 <button mat-icon-button (click)="fileInput.click()">
                     <mat-icon>attach_file</mat-icon>
                 </button>
-                <input type="file" #fileInput (change)="uploadFile($event)" style="display: none;" />
+                <input type="file" #fileInput (change)="uploadFile($event)" accept="image/*, video/*, application/pdf" style="display: none;" />
                 <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
             </div>
         </div>
