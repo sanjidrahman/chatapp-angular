@@ -1,1 +1,40 @@
-<p>chat works!</p>
+<!-- chat.component.html -->
+<mat-toolbar color="primary">
+    <span>Chat Application</span>
+</mat-toolbar>
+
+<div class="chat-container">
+    <mat-sidenav-container class="chat-sidenav-container">
+        <mat-sidenav mode="side" opened class="chat-drawer">
+            <mat-nav-list>
+                <h3 mat-subheader>Users</h3>
+                <mat-list-item *ngFor="let user of users" (click)="selectUser(user)">
+                    <mat-icon class="mat-icon">person</mat-icon>
+                    <span>{{ user.username }}</span>
+                </mat-list-item>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <div class="chat-content">
+            <div *ngIf="selectedUser" class="chat-header">
+                <h2>{{ selectedUser.username }}</h2>
+            </div>
+            <div class="chat-messages">
+                <div *ngFor="let message of messages" class="message" [class.self]="message.senderId == senderId">
+                    <p>{{ message.message }}</p>
+                </div>
+            </div>
+            <div class="chat-input">
+                <mat-form-field class="chat-input-field" appearance="fill">
+                    <mat-label>Type a message</mat-label>
+                    <input matInput [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" />
+                </mat-form-field>
+                <button mat-icon-button (click)="fileInput.click()">
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+                <input type="file" #fileInput (change)="uploadFile($event)" style="display: none;" />
+                <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+            </div>
+        </div>
+    </mat-sidenav-container>
+</div>
