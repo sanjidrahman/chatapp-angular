@@ -8,10 +8,11 @@ import { ChatService } from '../../services/chat/chat.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { SharedModule } from '../../shared/shared.module';
+import { environment } from '../../../environments/environment.development';
 
 const jwt_token = localStorage.getItem('token');
 const config: SocketIoConfig = {
-  url: 'http://localhost:3000',
+  url: environment.API_URL,
   options: {
     auth: {
       token: jwt_token

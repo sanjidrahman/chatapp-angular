@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChatService } from '../../services/chat/chat.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private _fb: FormBuilder,
     private _auth: AuthService,
+    private _chat: ChatService,
     private _router: Router,
     private _snackbar: MatSnackBar,
   ) { }
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             localStorage.setItem('token', res.token)
             this._router.navigate(['/chat'])
+            this._chat.reconfigureSocketConnection(res.token)
           },
           error: (err) => {
             this.openErrorSnackBar(err.error.message ? err.error.message : err.message)

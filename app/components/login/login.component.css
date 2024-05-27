@@ -29,3 +29,8 @@ button {
   margin-top: 0px;
   text-align: center;
 }
+
+.success-snackbar {
+  background-color: green;
+  color: white;
+}
