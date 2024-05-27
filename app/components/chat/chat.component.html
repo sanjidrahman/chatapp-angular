@@ -9,7 +9,6 @@
     <mat-sidenav-container class="chat-sidenav-container">
         <mat-sidenav mode="side" opened class="chat-drawer">
             <mat-nav-list>
-                <h3 mat-subheader>Users</h3>
                 <mat-list-item *ngFor="let user of users" (click)="selectUser(user)">
                     <mat-icon class="mat-icon">person</mat-icon>
                     <span>{{ user.username }}</span>
