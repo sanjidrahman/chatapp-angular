@@ -10,6 +10,9 @@ Here're some of the project's best features:
 *   Implemented guards for routes
 *   Interceptor with Global error handling
 *   Lazy loading
+*   Private and group chats
+*   File upload
+*   Notifying user when joining group
 
 <h2>🛠️ Installation Steps:</h2>
 
