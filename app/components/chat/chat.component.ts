@@ -4,6 +4,7 @@ import { ChatService } from '../../services/chat/chat.service';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { jwtDecode } from "jwt-decode";
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-chat',
@@ -12,6 +13,8 @@ import { jwtDecode } from "jwt-decode";
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
+  currentGroup!: string | null
+  groupUsers!: any[]
   users!: any[]
   selectedUser: any;
   messages: any[] = [];
@@ -26,12 +29,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    // current user token
     const token = localStorage.getItem('token')
     if (token) {
       const decoded: any = jwtDecode(token)
-      console.log(decoded);
       this.senderId = decoded.payload.id
     }
+
+    // getting all users list
     this.subscribe.add(
       this._auth.users().subscribe({
         next: (res: any) => {
@@ -44,54 +49,146 @@ export class ChatComponent implements OnInit, OnDestroy {
       )
     );
 
+    // updating private message list on new message (latest)
     this.subscribe.add(
       this._chat.onPrivateMessage().subscribe((message: any) => {
-        console.log(message);
         this.messages.push(message);
       })
     );
+
+    // updating group message list on new message (latest)
+    this.subscribe.add(
+      this._chat.onGroupMessage().subscribe((message: any) => {
+        this.messages.push(message)
+      })
+    )
+
+    this.subscribe.add(
+      this._chat.onUserConnected().subscribe(data => {
+        this.openSuccessSnackBar(data.message)
+      })
+    )
+
+    this.subscribe.add(
+      this._chat.onUserDisconnected().subscribe(data => {
+        this.openSuccessSnackBar(data.message)
+      })
+    )
+  }
+
+  joinGroup() {
+    this.currentGroup = 'main';
+    this._chat.joinGroup('main');
+  }
+
+  leaveGroup() {
+    if (this.currentGroup) {
+      this._chat.leaveGroup('main');
+      this.currentGroup = null;
+    }
+  }
+
+  selectGroup() {
+    this.joinGroup()
+    this.selectedUser = null;
+    this._chat.fetchGroupMessages(false).subscribe(messages => {
+      this.messages = messages
+    })
   }
 
   selectUser(user: any): void {
+    this.leaveGroup()
     this.selectedUser = user;
     this._chat.fetchMessages(this.senderId, user._id, true).subscribe(messages => {
-      console.log(messages);
       this.messages = messages;
     });
   }
 
+  // handling sending messages (private and group)
   sendMessage(): void {
-    if (this.newMessage.trim()) {
-      const message = this.newMessage.trim();
-      const data = {
-        recipientId: this.selectedUser._id,
-        message
-      };
-      this._chat.sendPrivateMessage(data)
-      this.newMessage = '';
+    if (!this.selectedUser) {
+      if (this.newMessage.trim()) {
+        const message = this.newMessage.trim();
+        const data = {
+          group: 'main',
+          message
+        };
+        this._chat.sendGroupMessage(data)
+        this.newMessage = '';
+      }
+    } else {
+      if (this.newMessage.trim()) {
+        const message = this.newMessage.trim();
+        const data = {
+          recipientId: this.selectedUser._id,
+          message
+        };
+        this._chat.sendPrivateMessage(data)
+        this.newMessage = '';
+      }
     }
   }
 
+  // handle file upload (private and group)
   uploadFile(event: any): void {
     const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('senderId', this.senderId);
-      formData.append('recipientId', this.selectedUser._id);
+    if (this.currentGroup && !this.selectedUser) {
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('senderId', this.senderId);
+        formData.append('group', this.currentGroup);
 
-      this._chat.uploadFile(formData).subscribe({
-        next: (res) => {
-          this.messages.push({
-            text: `File uploaded: ${res.fileName}`,
-            fileUrl: res.fileUrl,
-          });
-        },
-        error: (err) => {
-          this.openErrorSnackBar(`File upload failed: ${err.error.message ? err.error.message : err.message}`);
-        }
-      });
+        this._chat.uploadFile(formData).subscribe({
+          next: (res) => {
+            this.openSuccessSnackBar(res.message)
+          },
+          error: (err) => {
+            this.openErrorSnackBar(`File upload failed: ${err.error.message ? err.error.message : err.message}`);
+          }
+        });
+      }
+    } else {
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('senderId', this.senderId);
+        formData.append('recipientId', this.selectedUser._id);
+
+        this._chat.uploadFile(formData).subscribe({
+          next: (res) => {
+            this.openSuccessSnackBar(res.message)
+          },
+          error: (err) => {
+            this.openErrorSnackBar(`File upload failed: ${err.error.message ? err.error.message : err.message}`);
+          }
+        });
+      }
     }
+  }
+
+  loadImage(filename: string) {
+    return `${environment.API_URL}/file/images/${filename}`
+  }
+
+  downloadFile(id: string) {
+    return `${environment.API_URL}/api/files/${id}`
+  }
+
+  // function to check if message is self or not (for styling)
+  isSelfMessage(message: any): boolean {
+    const senderIdFromMessage = message.senderId._id || message.senderId;
+    return senderIdFromMessage == this.senderId;
+  }
+
+  formatTimestamp(timestamp: string): string {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString(); // You can customize the format as needed
+  }
+
+  logout() {
+    this._auth.logout()
+    this.openSuccessSnackBar('Logged out')
   }
 
   // snack bar function
@@ -102,6 +199,15 @@ export class ChatComponent implements OnInit, OnDestroy {
       horizontalPosition: 'center'
     });
   }
+
+  openSuccessSnackBar(message: string): void {
+    this._snackbar.open(message, 'Close', {
+      duration: 5000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
+  }
+  // -----------------------------
 
   ngOnDestroy(): void {
     this.subscribe.unsubscribe()

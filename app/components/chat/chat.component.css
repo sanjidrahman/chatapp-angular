@@ -1,6 +1,6 @@
 .chat-container {
   display: flex;
-  height: calc(100vh - 64px); 
+  height: calc(100vh - 64px);
 }
 
 .chat-sidenav-container {
@@ -85,4 +85,38 @@
 
 .download-link:hover {
   text-decoration: underline;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.chat-messages .message .message-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75em;
+  color: #888;
+}
+
+.chat-messages .message .username {
+  font-weight: bold;
+}
+
+.chat-messages .message .timestamp {
+  margin-left: 0px;
+}
+
+.center-message {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.center-message p {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
