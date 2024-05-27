@@ -26,6 +26,7 @@
                 <h2>{{ selectedUser.username }}</h2>
             </div>
             <div class="chat-messages">
+                <mat-spinner *ngIf="loadingMessages" diameter="30" color="accent"></mat-spinner>
                 <div *ngFor="let message of messages" class="message" [class.self]="isSelfMessage(message)"
                     [class.other]="!isSelfMessage(message)">
                     <div class="message-info">

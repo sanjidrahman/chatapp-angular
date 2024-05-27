@@ -20,6 +20,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: any[] = [];
   newMessage: string = '';
   senderId: any
+  loadingMessages: boolean = false;
   subscribe = new Subscription()
 
   constructor(
@@ -91,16 +92,20 @@ export class ChatComponent implements OnInit, OnDestroy {
   selectGroup() {
     this.joinGroup()
     this.selectedUser = null;
+    this.loadingMessages = true;
     this._chat.fetchGroupMessages(false).subscribe(messages => {
       this.messages = messages
+      this.loadingMessages = false
     })
   }
 
   selectUser(user: any): void {
+    this.loadingMessages = true;
     this.leaveGroup()
     this.selectedUser = user;
     this._chat.fetchMessages(this.senderId, user._id, true).subscribe(messages => {
       this.messages = messages;
+      this.loadingMessages = false
     });
   }
 
