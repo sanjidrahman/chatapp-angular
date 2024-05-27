@@ -5,6 +5,7 @@
 <h2>🚀 Demo</h2>
 
 [http://chatapp-angular.s3-website-us-east-1.amazonaws.com](http://chatapp-angular.s3-website-us-east-1.amazonaws.com)
+[Demo Video](https://drive.google.com/file/d/1i0gws37gP4hvvMs-akl644SfhyLYGBQH/view?usp=sharing)
   
 <h2>🧐 Features</h2>
 
