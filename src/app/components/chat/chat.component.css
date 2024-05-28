@@ -1,0 +1,122 @@
+.chat-container {
+  display: flex;
+  height: calc(100vh - 64px);
+}
+
+.chat-sidenav-container {
+  flex-grow: 1;
+}
+
+.chat-drawer {
+  width: 300px;
+}
+
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 16px;
+}
+
+.chat-header {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.message {
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.message.self {
+  background-color: #e0f7fa;
+  align-self: flex-end;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+}
+
+.chat-input-field {
+  flex-grow: 1;
+}
+
+.mat-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  font-size: 21px;
+}
+
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+.message.self {
+  align-self: flex-end;
+  text-align: right;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.message.other {
+  align-self: flex-start;
+  text-align: left;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.download-link {
+  margin-top: 5px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.download-link:hover {
+  text-decoration: underline;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.chat-messages .message .message-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75em;
+  color: #888;
+}
+
+.chat-messages .message .username {
+  font-weight: bold;
+}
+
+.chat-messages .message .timestamp {
+  margin-left: 0px;
+}
+
+.center-message {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.center-message p {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
