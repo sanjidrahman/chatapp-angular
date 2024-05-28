@@ -1,6 +1,11 @@
 <h1 align="center" id="title">Angular Chatapp</h1>
 
 <p align="center"><img src="https://socialify.git.ci/sanjidrahman/mt-chatapp-angular/image?font=KoHo&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Circuit%20Board&amp;theme=Dark" alt="project-image"></p>
+
+<h2>🚀 Demo</h2>
+
+[http://chatapp-angular.s3-website-us-east-1.amazonaws.com](http://chatapp-angular.s3-website-us-east-1.amazonaws.com)  
+[Demo Video](https://drive.google.com/file/d/1i0gws37gP4hvvMs-akl644SfhyLYGBQH/view?usp=sharing)
   
 <h2>🧐 Features</h2>
 
@@ -29,14 +34,7 @@ cd mt-chatapp-angular
 npm install
 ```
 
-<p>3. Setup .env file</p>
-
-```
-link to env file: 
-https://drive.google.com/file/d/1Vru_E4cN_lfNdD_MMqwE2O9EbDezvMye/view?usp=sharing
-```
-
-<p>4. Start project</p>
+<p>3. Start project</p>
 
 ```
 ng serve
