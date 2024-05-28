@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   selectedUser: any;
   messages: any[] = [];
   newMessage: string = '';
-  senderId: any
+  senderId!: string
   loadingMessages: boolean = false;
   subscribe = new Subscription()
 
@@ -52,14 +52,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     // updating private message list on new message (latest)
     this.subscribe.add(
-      this._chat.onPrivateMessage().subscribe((message: any) => {
+      this._chat.onPrivateMessage().subscribe((message) => {
         this.messages.push(message);
       })
     );
 
     // updating group message list on new message (latest)
     this.subscribe.add(
-      this._chat.onGroupMessage().subscribe((message: any) => {
+      this._chat.onGroupMessage().subscribe((message) => {
         this.messages.push(message)
       })
     )
@@ -104,6 +104,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.leaveGroup()
     this.selectedUser = user;
     this._chat.fetchMessages(this.senderId, user._id, true).subscribe(messages => {
+
       this.messages = messages;
       this.loadingMessages = false
     });
@@ -207,7 +208,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   openSuccessSnackBar(message: string): void {
     this._snackbar.open(message, 'Close', {
-      duration: 5000,
+      duration: 5000, 
       verticalPosition: 'top',
       horizontalPosition: 'center',
     });

@@ -4,9 +4,22 @@ import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
-@Injectable({
-  providedIn: 'root'
-})
+interface messageModel {
+  _id: string
+  createdAt: string
+  message: string
+  private: boolean
+  senderId: senderModel | string
+  __v: number
+}
+
+interface senderModel {
+  email: string
+  password: string
+  username: string
+}
+
+@Injectable()
 export class ChatService {
 
   constructor(
@@ -25,22 +38,22 @@ export class ChatService {
     this._socket.emit('privateMessage', data);
   }
 
-  fetchMessages(senderId: string, recipientId: string, isPrivate: boolean): Observable<any[]> {
+  fetchMessages(senderId: string, recipientId: string, isPrivate: boolean): Observable<messageModel[]> {
     this._socket.emit('fetchMessages', { senderId, recipientId, isPrivate });
-    return this._socket.fromEvent<any[]>('messageHistory');
+    return this._socket.fromEvent('messageHistory');
   }
 
-  fetchGroupMessages(isPrivate: boolean) {
+  fetchGroupMessages(isPrivate: boolean): Observable<messageModel[]> {
     this._socket.emit('fetchGroupMessages', { isPrivate })
-    return this._socket.fromEvent<any[]>('messageHistory');
+    return this._socket.fromEvent('messageHistory');
   }
 
   onPrivateMessage(): Observable<{ message?: string, senderId: string, createdAt: string, fileUrl?: string }> {
     return this._socket.fromEvent('privateMessage');
   }
 
-  uploadFile(formData: FormData): Observable<any> {
-    return this._http.post(`${this.commonUrl}/api/upload`, formData); // Update the URL to your backend API
+  uploadFile(formData: FormData): Observable<{ message: string }> {
+    return this._http.post<{ message: string }>(`${this.commonUrl}/api/upload`, formData); // Update the URL to your backend API
   }
 
   joinGroup(group: string) {
@@ -63,7 +76,7 @@ export class ChatService {
     return this._socket.fromEvent('userConnected');
   }
 
-  onUserDisconnected(): Observable<{ message: string }>{
+  onUserDisconnected(): Observable<{ message: string }> {
     return this._socket.fromEvent('userDisconnected');
   }
 
